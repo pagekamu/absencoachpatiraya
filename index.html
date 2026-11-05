@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Absensi Coach DynEd - Pati Raya</title>
+<style>
+:root{
+  --paper:#f3f0e8;--ink:#171717;--purple:#4534db;--acid:#d9ff3f;
+  --pink:#ff5c91;--orange:#ff6b35;--line:#171717;--muted:#6a675f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+header{background:var(--acid);color:var(--ink);padding:24px 18px 22px;border-bottom:3px solid var(--ink);position:relative;overflow:hidden}
+.header-inner,main{max-width:720px;margin:auto}
+.header-inner{position:relative;z-index:1}
+header:after{content:"DYNED";position:absolute;right:-18px;bottom:-28px;font-size:clamp(5rem,18vw,10rem);font-weight:900;letter-spacing:-.09em;color:#1717170d;transform:rotate(-8deg)}
+.eyebrow{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;background:var(--ink);color:var(--acid);padding:6px 9px;transform:rotate(-2deg)}
+h1{font-size:clamp(2.15rem,8vw,4rem);line-height:.92;letter-spacing:-.075em;text-transform:uppercase;margin:18px 0 12px;font-weight:950;max-width:600px}
+h1 span{color:var(--purple);display:block}
+header p{font-weight:700;font-size:.92rem;max-width:390px;margin:0}
+main{padding:18px 14px 32px}
+.date-card{background:var(--ink);color:var(--paper);padding:18px;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--pink);transform:rotate(-.5deg)}
+.date-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.date-big{font-size:clamp(1.2rem,5vw,1.7rem);font-weight:900;line-height:1.05;letter-spacing:-.04em}
+.date-sub{color:#c7c3b9;font-size:.8rem;margin-top:8px}
+.today-badge{font-size:.72rem;font-weight:900;letter-spacing:.08em;background:var(--pink);color:var(--ink);padding:8px 10px;white-space:nowrap;transform:rotate(3deg)}
+.statusline{font-size:.82rem;margin-top:17px;display:flex;justify-content:space-between;gap:8px;color:#d0ccc4}
+.statusline strong{color:var(--acid);font-size:1rem}
+.progress{height:10px;background:#393939;border:1px solid #777;margin-top:9px}
+.progress div{height:100%;width:0;background:var(--acid);transition:width .2s}
+.people{display:grid;gap:10px;margin-top:20px}
+.person{display:flex;align-items:center;gap:12px;background:#fffdf8;border:2px solid var(--ink);padding:13px 12px;min-height:70px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.person:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.person input{appearance:none;width:27px;height:27px;border:2px solid var(--ink);background:var(--paper);margin:0;flex-shrink:0;display:grid;place-items:center}
+.person input:checked{background:var(--purple);border-color:var(--purple)}
+.person input:checked:after{content:"✓";color:white;font-weight:900;font-size:1.2rem}
+.person-name{font-size:.96rem;font-weight:800;letter-spacing:-.02em;flex:1}
+.check-label{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.person:has(input:checked){background:var(--acid)}
+.person:has(input:checked) .check-label{color:var(--purple)}
+.note{font-size:.78rem;line-height:1.5;color:var(--muted);border-left:3px solid var(--orange);padding-left:10px;margin:18px 0}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+button{font:inherit;font-weight:900;text-transform:uppercase;letter-spacing:.03em;border:2px solid var(--ink);padding:13px 10px;cursor:pointer}
+.secondary{background:#fffdf8;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.submit-btn{background:var(--acid);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.submit-btn:disabled{opacity:.6;cursor:wait;box-shadow:none}
+.message{margin-top:10px;padding:10px 11px;border:1px solid var(--ink);font-size:.82rem;font-weight:700;display:none}
+.message.show{display:block}.message.ok{background:var(--acid);color:var(--ink)}.message.warn{background:#ffdbe6;color:var(--ink)}
+.section-title{font-size:1.1rem;font-weight:950;letter-spacing:-.04em;text-transform:uppercase;margin:24px 0 9px}
+.sync-card{background:#fffdf8;border:2px dashed var(--ink);padding:14px;font-size:.8rem;line-height:1.5;color:var(--muted)}
+.sync-card strong{color:var(--ink)}.sync-dot{display:inline-block;width:9px;height:9px;background:var(--orange);border:1px solid var(--ink);margin-right:6px}
+footer{padding:24px 14px;text-align:center;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+@media(min-width:600px){header{padding:32px 24px}.people{grid-template-columns:1fr 1fr}.person{padding:14px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="header-inner">
+<div class="eyebrow">Pati Raya / Coach Attendance</div>
+<h1>Absensi Coach <span>DynEd</span></h1>
+<p>PATI RAYA — Senin / Selasa / Rabu / Kamis / Jumat / Sabtu. Mark your attendance.</p>
+</div></header>
+<main>
+  <section class="date-card">
+    <div class="date-row"><div><div class="date-big" id="dateTitle">Memuat tanggal…</div><div class="date-sub" id="dateSub"></div></div><span class="today-badge">HARI INI</span></div>
+    <div class="statusline"><strong id="count">0 dari 7 hadir</strong><span id="dayStatus"></span></div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </section>
+
+  <div id="people" class="people"></div>
+  <p class="note">Absensi tersedia Senin sampai Sabtu, mulai 2 November 2026 sampai 30 November 2027. Perubahan akan tersimpan di HP ini dan dikirim ke Google Sheets jika koneksi sudah disiapkan.</p>
+  <div class="actions">
+    <button class="secondary" id="clearAll">Kosongkan</button>
+    <button class="submit-btn" id="submitAttendance">Kirim Absensi</button>
+  </div>
+
+  <h2 class="section-title">Status Google Sheets</h2>
+  <div class="sync-card" id="syncCard"><span class="sync-dot"></span><strong id="syncStatus">Belum dikonfigurasi.</strong><div id="message" class="message"></div></div>
+</main>
+<footer>DYNED COACH ATTENDANCE • PATI RAYA • NOV 2026—NOV 2027</footer>
+
+<script>
+(() => {
+  // Paste Google Apps Script Web App URL here after deployment.
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbxbEOwPmVReJHbMrGDeWpsuohxp9_dXkkaneZ8T1mDtqELpbzKyWCNOiWABCflbk5ps6A/exec";
+  const PEOPLE = ["Sri Yuliani","Nur Wakhidah","Muhammad Sholahuddin","Nabila Nailatus Sakina","Nabila Cyntya Banowati","Nada Julista","Dwi Rahayuningsih"];
+  const START = "2026-11-02", END = "2027-11-30";
+  const STORAGE = "daily-attendance-dyned-pati-raya-v2";
+
+  const today = new Date();
+  const dateKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+  const day = today.getDay();
+  const eligibleDay = [1,2,3,4,5,6].includes(day);
+  const inPeriod = dateKey >= START && dateKey <= END;
+  const active = eligibleDay && inPeriod;
+  let localData = {};
+  try { localData = JSON.parse(localStorage.getItem(STORAGE) || "{}"); } catch {}
+
+  const dayNames = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  const dateObj = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const formatDMY = d => `${String(d.getDate()).padStart(2,"0")}-${String(d.getMonth()+1).padStart(2,"0")}-${d.getFullYear()}`;
+  document.getElementById("dateTitle").textContent = formatDMY(dateObj);
+  document.getElementById("dateSub").textContent = dayNames[day];
+  document.getElementById("dayStatus").textContent = active ? " • Hari absensi" : " • Tidak ada jadwal absensi hari ini";
+  document.getElementById("syncStatus").textContent = GAS_URL.startsWith("https://script.google.com/") ? "URL Apps Script sudah diisi." : "Belum dikonfigurasi.";
+
+  const container = document.getElementById("people");
+  if (!active) {
+    container.innerHTML = `<div class="sync-card" style="grid-column:1/-1;text-align:center;padding:24px"><strong>Hari ini tidak ada jadwal absensi.</strong><br>Absensi dibuka setiap Senin sampai Sabtu selama periode yang ditentukan.</div>`;
+  } else {
+    PEOPLE.forEach(name => {
+      const label = document.createElement("label");
+      label.className = "person";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = Boolean(localData[dateKey]?.[name]);
+      const nameSpan = document.createElement("span"); nameSpan.className = "person-name"; nameSpan.textContent = name;
+      const state = document.createElement("span"); state.className = "check-label"; state.textContent = checkbox.checked ? "Hadir ✓" : "Belum";
+      checkbox.addEventListener("change", async () => {
+        localData[dateKey] ||= {};
+        localData[dateKey][name] = checkbox.checked;
+        localStorage.setItem(STORAGE, JSON.stringify(localData));
+        state.textContent = checkbox.checked ? "Hadir ✓" : "Belum";
+        updateProgress();
+        updateSubmitLabel();
+      });
+      label.append(checkbox,nameSpan,state); container.appendChild(label);
+    });
+  }
+
+  function updateProgress() {
+    const checked = [...container.querySelectorAll('input[type="checkbox"]:checked')].length;
+    document.getElementById("count").textContent = `${checked} dari ${PEOPLE.length} hadir`;
+    document.getElementById("progressBar").style.width = `${checked / PEOPLE.length * 100}%`;
+  }
+  function showMessage(text, type) {
+    const el = document.getElementById("message"); el.textContent = text; el.className = `message show ${type}`;
+  }
+  function updateSubmitLabel() {
+    const btn = document.getElementById("submitAttendance");
+    const checked = [...container.querySelectorAll('input[type="checkbox"]:checked')].length;
+    btn.textContent = checked ? `Kirim Absensi (${checked}/7)` : "Kirim Absensi";
+  }
+
+  async function sendAttendance() {
+    if (!active) return;
+    const btn = document.getElementById("submitAttendance");
+    const checkedNames = [...container.querySelectorAll('input[type="checkbox"]:checked')]
+      .map(box => box.closest(".person").querySelector(".person-name").textContent);
+
+    if (!confirm(`Kirim absensi hari ini?\n\n${checkedNames.length} dari ${PEOPLE.length} coach ditandai hadir.`)) return;
+
+    const payload = {
+      action: "submitAttendance",
+      date: dateKey,
+      day: dayNames[day],
+      people: PEOPLE.map(name => ({name, present: checkedNames.includes(name)})),
+      clientTimestamp: new Date().toISOString()
+    };
+
+    btn.disabled = true;
+    btn.textContent = "Mengirim...";
+    const messageEl = document.getElementById("message");
+    messageEl.className = "message show";
+    messageEl.textContent = "Sedang mengirim absensi…";
+
+    if (!GAS_URL.startsWith("https://script.google.com/")) {
+      localData[dateKey] ||= {};
+      PEOPLE.forEach(name => localData[dateKey][name] = checkedNames.includes(name));
+      localData[dateKey]._submittedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE, JSON.stringify(localData));
+      messageEl.className = "message show warn";
+      messageEl.textContent = "Absensi tersimpan di perangkat ini, tetapi Google Sheets belum dikonfigurasi. Data belum terkirim ke spreadsheet.";
+      btn.disabled = false;
+      updateSubmitLabel();
+      return;
+    }
+
+    try {
+      await fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {"Content-Type":"text/plain;charset=utf-8"},
+        body: JSON.stringify(payload)
+      });
+      localData[dateKey] ||= {};
+      PEOPLE.forEach(name => localData[dateKey][name] = checkedNames.includes(name));
+      localData[dateKey]._submittedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE, JSON.stringify(localData));
+      messageEl.className = "message show ok";
+      messageEl.textContent = `Absensi ${dateKey} dikirim pada ${new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})}. Cek Google Sheets untuk memastikan data masuk.`;
+      document.getElementById("syncStatus").textContent = "Pengiriman absensi dilakukan.";
+    } catch (err) {
+      messageEl.className = "message show warn";
+      messageEl.textContent = "Pengiriman gagal. Periksa koneksi internet dan coba kirim kembali.";
+    } finally {
+      btn.disabled = false;
+      updateSubmitLabel();
+    }
+  }
+
+  document.getElementById("submitAttendance").addEventListener("click", sendAttendance);
+  document.getElementById("clearAll").addEventListener("click", () => {
+    if (!active) return;
+    if (!confirm("Kosongkan pilihan kehadiran hari ini?")) return;
+    container.querySelectorAll('input[type="checkbox"]').forEach(box => {
+      box.checked = false;
+      box.dispatchEvent(new Event("change"));
+    });
+    updateSubmitLabel();
+  });
+  updateProgress();
+  updateSubmitLabel();
+})();
+</script>
+</body>
+</html>
